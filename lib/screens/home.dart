@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +17,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // final MqttServerClient client = MqttServerClient('a25p8nrysfd25r-ats.iot.us-west-2.amazonaws.com', '');
+  Map<String, dynamic> data = {
+    'time': 0.0,
+    'humidity': 0.0,
+    'temperature': 0.0,
+    'moisture': 0.0
+  };
   @override
   void initState() {
     super.initState();
@@ -74,16 +80,20 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.zero,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, childAspectRatio: 3 / 1.5),
-              children: const [
+              children: [
                 SensorNode(
                     icon: 'thermometer.png',
                     label: 'Temperature',
-                    value: '37\u00B0 C'),
+                    value: '${data['temperature'].toStringAsFixed(1)}\u00B0 C'),
                 SensorNode(
-                    icon: 'humidity.png', label: 'Humidity', value: '80 %'),
+                    icon: 'humidity.png',
+                    label: 'Humidity',
+                    value: '${data['humidity']} %'),
                 SensorNode(
-                    icon: 'moisture.png', label: 'Moisture', value: '8.8 %'),
-                SensorNode(icon: 'rain.png', label: 'Rain', value: 'YES')
+                    icon: 'moisture.png',
+                    label: 'Moisture',
+                    value: '${data['moisture'] == 0 ? 'Dry' : 'Wet'} '),
+                const SensorNode(icon: 'rain.png', label: 'Rain', value: 'No')
               ],
             ),
           ),
@@ -218,17 +228,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // logging if you wish
     client.logging(on: true);
 
-    // Set the security context as you need, note this is the standard Dart SecurityContext class.
-    // If this is incorrect the TLS handshake will abort and a Handshake exception will be raised,
-    // no connect ack message will be received and the broker will disconnect.
-    // For AWS IoT Core, we need to set the AWS Root CA, device cert & device private key
-    // Note that for Flutter users the parameters above can be set in byte format rather than file paths
-    // final context = SecurityContext.defaultContext;
-    // context.setClientAuthorities('assets/certs/RootCA.pem');
-    // context.useCertificateChain('assets/certs/DeviceCertificate.crt');
-    // context.usePrivateKey('assets/certs/Private.key');
-    // client.securityContext = context;
-
     final context = SecurityContext.defaultContext;
 
     final ByteData crtData =
@@ -243,13 +242,10 @@ class _HomeScreenState extends State<HomeScreen> {
     context.usePrivateKeyBytes(keyBytes.buffer.asUint8List());
 
     client.securityContext = context;
-
-    // Setup the connection Message
     final connMess =
         MqttConnectMessage().withClientIdentifier('android123').startClean();
     client.connectionMessage = connMess;
 
-    // Connect the client
     try {
       print('MQTT client connecting to AWS IoT....');
       await client.connect();
@@ -260,21 +256,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (client.connectionStatus!.state == MqttConnectionState.connected) {
       print('MQTT client connected to AWS IoT');
-
-      // Publish to a topic of your choice
-      const topic = '/esp32/sub';
+      const topic = 'esp32/pub';
       final builder = MqttClientPayloadBuilder();
       builder.addString('Hello World');
-      // Important: AWS IoT Core can only handle QOS of 0 or 1. QOS 2 (exactlyOnce) will fail!
-      client.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
 
-      // Subscribe to the same topic
+      client.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
       client.subscribe(topic, MqttQos.atLeastOnce);
-      // Print incoming messages from another client on this topic
       client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final recMess = c[0].payload as MqttPublishMessage;
         final pt =
             MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+        setState(() {
+          data = json.decode(pt);
+        });
         print(
             'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
         print('');
@@ -288,8 +283,8 @@ class _HomeScreenState extends State<HomeScreen> {
     print('Sleeping....');
     await MqttUtilities.asyncSleep(10);
 
-    print('Disconnecting');
-    client.disconnect();
+    //print('Disconnecting');
+    //client.disconnect();
 
     return 0;
   }
