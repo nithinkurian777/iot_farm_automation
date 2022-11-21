@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iot_app_cusat/values/colors.dart';
+import 'package:iot_app_cusat/values/conf.dart';
 import 'package:iot_app_cusat/values/fonts.dart';
 import 'package:iot_app_cusat/widgets/button.dart';
 import 'package:iot_app_cusat/widgets/input_field.dart';
@@ -17,9 +18,16 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _passwordController = TextEditingController(text: '');
 
   _login(email, password) async {
+    if (email.isEmpty || password.isEmpty) {
+      const snackBar = SnackBar(
+        content: Text('Fields can\'t be empty!'),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request =
-        http.Request('POST', Uri.parse('http://127.0.0.1:8000/api/login'));
+    var request = http.Request('POST', Uri.parse(endpoint));
     request.bodyFields = {'email': '$email', 'password': '$password'};
     request.headers.addAll(headers);
 
@@ -77,16 +85,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            const RectButton(route: '/home', text: 'Login'),
+            InkWell(
+                onTap: (() {
+                  _login(_emailController.text, _passwordController.text);
+                }),
+                child: const RectButton(text: 'Login')),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Text('Don\'t have an account? '),
-                  Text(
-                    'Sign up',
-                    style: FontValues.linkStyle,
+                  GestureDetector(
+                    onTap: (() {
+                      Navigator.pushNamed(context, '/register');
+                    }),
+                    child: const Text(
+                      'Sign up',
+                      style: FontValues.linkStyle,
+                    ),
                   )
                 ],
               ),

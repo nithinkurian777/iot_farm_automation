@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iot_app_cusat/screens/forgot_password.dart';
 import 'package:iot_app_cusat/screens/home.dart';
 import 'package:iot_app_cusat/screens/intro.dart';
+import 'package:iot_app_cusat/screens/log_screen.dart';
 import 'package:iot_app_cusat/screens/login.dart';
 import 'package:iot_app_cusat/screens/registration.dart';
 
@@ -17,13 +18,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Farm Automation',
-      initialRoute: '/',
+      initialRoute: '/log',
       routes: {
         '/': (context) => const IntroScreen(),
         '/register': (context) => const RegistrationScreen(),
         '/login': (context) => const LoginScreen(),
         '/forgot': (context) => const ForgotPasswordScreen(),
         '/home': (context) => const HomeScreen(),
+        '/log': (context) => const LogScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.green,

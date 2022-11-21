@@ -44,7 +44,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 child: const Text('Sign In', style: FontValues.linkStyle)),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
-              child: RectButton(route: '/home', text: 'Submit'),
+              child: RectButton(text: 'Submit'),
             )
           ],
         ),

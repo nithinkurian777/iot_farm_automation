@@ -17,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
   Map<String, dynamic> data = {
     'time': 0.0,
     'humidity': 0.0,
@@ -32,6 +34,12 @@ class _HomeScreenState extends State<HomeScreen> {
   _connectMQTT() async {
     //await mqttConnect();
     await newAWSConnectFronExample();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -114,17 +122,22 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton:
           FloatingActionButton(onPressed: () {}, child: const Icon(Icons.add)),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(
-            label: 'Config',
-            icon: ImageIcon(AssetImage('assets/images/config.png'))),
-        BottomNavigationBarItem(
-            label: 'Home',
-            icon: ImageIcon(AssetImage('assets/images/home.png'))),
-        BottomNavigationBarItem(
-            label: 'User',
-            icon: ImageIcon(AssetImage('assets/images/user_icon.png')))
-      ]),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+              label: 'Config',
+              icon: ImageIcon(AssetImage('assets/images/config.png'))),
+          BottomNavigationBarItem(
+              label: 'Home',
+              icon: ImageIcon(AssetImage('assets/images/home.png'))),
+          BottomNavigationBarItem(
+              label: 'User',
+              icon: ImageIcon(AssetImage('assets/images/user_icon.png'))),
+        ],
+        onTap: _onItemTapped,
+        currentIndex: _selectedIndex,
+        elevation: 5,
+      ),
     );
   }
 

@@ -45,7 +45,11 @@ class IntroScreen extends StatelessWidget {
                 style: FontValues.mainContent,
               ),
             ),
-            const RectButton(route: '/register', text: 'Get Started'),
+            InkWell(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
+                child: const RectButton(text: 'Get Started')),
           ],
         ),
       ),

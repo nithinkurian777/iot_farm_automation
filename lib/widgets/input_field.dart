@@ -15,6 +15,12 @@ class InputField extends StatefulWidget {
 
 class _InputFieldState extends State<InputField> {
   @override
+  void initState() {
+    super.initState();
+    widget.obscureText = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
