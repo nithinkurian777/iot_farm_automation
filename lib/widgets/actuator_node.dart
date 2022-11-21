@@ -7,11 +7,13 @@ class ActuatorNode extends StatefulWidget {
       required this.icon,
       required this.label,
       required this.description,
-      required this.btnStatus});
+      required this.btnStatus,
+      required this.valueChanged});
   final String icon;
   final String label;
   final String description;
   final bool btnStatus;
+  final ValueChanged<String?> valueChanged;
 
   @override
   State<ActuatorNode> createState() => _ActuatorNodeState();
@@ -42,7 +44,11 @@ class _ActuatorNodeState extends State<ActuatorNode> {
               ),
             ),
             Text(widget.description),
-            Switch(value: widget.btnStatus, onChanged: ((value) {})),
+            Switch(
+                value: widget.btnStatus,
+                onChanged: ((value) {
+                  widget.valueChanged;
+                })),
           ],
         ),
       ),

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Farm Automation',
-      initialRoute: '/log',
+      initialRoute: '/home',
       routes: {
         '/': (context) => const IntroScreen(),
         '/register': (context) => const RegistrationScreen(),

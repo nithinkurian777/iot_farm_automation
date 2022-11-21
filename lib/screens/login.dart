@@ -14,8 +14,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _emailController = TextEditingController(text: '');
-  TextEditingController _passwordController = TextEditingController(text: '');
+  final TextEditingController _emailController =
+      TextEditingController(text: '');
+  final TextEditingController _passwordController =
+      TextEditingController(text: '');
 
   _login(email, password) async {
     if (email.isEmpty || password.isEmpty) {
@@ -27,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request = http.Request('POST', Uri.parse(endpoint));
+    var request = http.Request('POST', Uri.parse('${endpoint}login'));
     request.bodyFields = {'email': '$email', 'password': '$password'};
     request.headers.addAll(headers);
 
