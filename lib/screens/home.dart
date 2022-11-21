@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SensorNode(
                     icon: 'moisture.png',
                     label: 'Moisture',
-                    value: '${data['moisture'] == 0 ? 'Dry' : 'Wet'} '),
+                    value: '${data['moisture'] == 1 ? 'Dry' : 'Wet'} '),
                 const SensorNode(icon: 'rain.png', label: 'Rain', value: 'No')
               ],
             ),
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: 5,
+                itemCount: 2,
                 itemBuilder: ((context, index) {
                   return ActuatorNode(
                     icon: 'motor.png',

@@ -5,7 +5,6 @@ import 'package:iot_app_cusat/screens/intro.dart';
 import 'package:iot_app_cusat/screens/login.dart';
 import 'package:iot_app_cusat/screens/registration.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -18,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Farm Automation',
-      initialRoute: '/home',
+      initialRoute: '/',
       routes: {
         '/': (context) => const IntroScreen(),
         '/register': (context) => const RegistrationScreen(),
